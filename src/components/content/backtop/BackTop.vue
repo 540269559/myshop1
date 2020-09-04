@@ -1,6 +1,6 @@
 <template>
   <div class="back_top">
-    <img src="~@/assets/img/backtop/top.png" v-show="top_show">
+    <img src="~@/assets/img/backtop/top.png">
   </div>
 </template>
 

@@ -11,20 +11,18 @@
       <top-category 
       class="top_category_control" 
       :titles="['流行', '新款', '最新']" 
-      @changeGoods="changeGoods" 
-      ref="top_cat" 
+      @changeGoods="changeGoods"
       @top_catimgLoad="top_catimgLoad()"
-      v-show="ifShow"/>
+      v-show="ifShow"
+      ref="top_cat1"/>
 
       <scroll class="content" 
       ref="scroll" 
-      @showBackTop="show_back_top()" 
       :probeType="3" 
-      @hideBackTop="hide_back_top()" 
       :pullUpLoad="true"
       @pullingUp="loadmore()"
       @back_top="back_top()"
-      @ScroolPos="ScroolPos">  
+      @ScrollPos="ScrollPos">  
 
       <!-- 大模块 -->
       <home-swiper class="swiper" 
@@ -49,19 +47,21 @@
       <goods-list :goods="goods[goods_type].list" ref="goods_list"/>
       
       </scroll>
-      <back-top ref="back_top" @click.native="back_top()"/>
+      <back-top ref="back_top" @click.native="back_top()" v-show="top_show"/>
       <br>
       <br>
     </div>
 </template>
 
 <script>
+import {itemListenerMixin, backTopItem, home_detail} from "@/common/mixin.js"
+
 import NavBar from "@/components/common/navbar/NavBar"
-import Scroll from "@/components/common/scroll/Scroll"
+
 
 import TopCategory from '@/components/content/top_category/TopCategory'
 import GoodsList from "@/components/content/goods/GoodsList"
-import BackTop from '@/components/content/backtop/BackTop'
+
 
 
 import HomeSwiper from './childCops/HomeSwiper'
@@ -83,8 +83,6 @@ export default {
     Feature,
     TopCategory,
     GoodsList,
-    Scroll,
-    BackTop
   },
   data() {
     return {
@@ -99,9 +97,11 @@ export default {
       control_top_cat: 0,
       ifShow: false,
       position_y: 0,
-      point_y: 0
+      point_y: 0,
+      itemImgListener: null
     }
   },
+  mixins: [itemListenerMixin, backTopItem, home_detail],
   created() {
     // 请求多个数据
     this.getHomeData()
@@ -118,57 +118,37 @@ export default {
     this.$refs.scroll.scrollTo(0, this.point_y)
   },
   deactivated() {
+    // 1.保存y
     this.point_y = this.position_y
+
+    // 
+    this.$bus.$off('itemImageLoad', this.itemImgListener)
   },
   mounted() {
-
-    // 图片加载完成事件监听
-    const refresh1 = debounce(this.$refs.scroll.refresh, 200)
-    // 监听图片加载完成
-    this.$bus.$on('itemImageLoad', () => {
-      // this.$refs.scroll.refresh();
-      refresh1()
-    })
-
-    // 获取组件并赋值
-    // $el获取组件中的所有元素
-    // this.control_top_cat = this.$refs.top_cat
-    // console.log(this.$refs.top_cat.$el.offsetTop)
 
   },
   methods: {
     /*
       事件监听相关方法
     */
-    ScroolPos(position) {
+    ScrollPos(position) {
       this.position_y = position.y
       if(position.y < -1000)
-        this.$refs.back_top.top_show = true
+        this.top_show = true
       else 
-        this.$refs.back_top.top_show = false
-
+        this.top_show = false
       if(position.y < -494)
         this.ifShow = true
       else 
         this.ifShow = false
       // console.log(position.y)
     },
-    back_top() {
-      this.$refs.scroll.scrollTo(0, 0, 500)
-      console.log(456)
-    },
-    // hide_back_top() {
-    //   this.$refs.back_top.top_show = false
-    // },
-    // show_back_top() {
-    //   this.$refs.back_top.top_show = true
-    // },
     loadmore() {
       this.getHomeGoodsData(this.goods_type)
-      this.$refs.scroll.refresh()
+      
     },
     feaImgLoad() {
-      console.log(this.$refs.goods_list.$el.offsetTop)
+
     },
     /*
       事件相关方法
@@ -187,6 +167,8 @@ export default {
         default:
           break;
       }
+      this.$refs.top_cat1.currentIndex = index
+      this.$refs.top_cat.currentIndex = index
     },
     /*
       网络请求相关方法
@@ -196,7 +178,7 @@ export default {
         // this.res = res
         this.banners = res.data.banner.list;
         this.recommends = res.data.recommend.list;
-        console.log(res)
+        // console.log(res)
       })
     },
     getHomeGoodsData(type) {
@@ -205,7 +187,7 @@ export default {
         // this.goods[type].list.push(...res.data.list)
         this.goods[type].list.push(...res.data.list)
         this.goods[type].page += 1
-        console.log(res)
+        // console.log(res)
 
         this.$refs.scroll.finishPullUp()
       })

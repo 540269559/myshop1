@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="detail_tab_bar">
     <nav-bar>
       <div slot="left" class="back">
         <img src="~@/assets/img/detail/back.png" @click="backClick">
@@ -28,6 +28,7 @@ export default {
   methods: {
     title_click(index) {
       this.currentIndex = index;
+      this.$emit('itemClick', index)
     },
     backClick() {
       this.$router.go(-1)
@@ -61,5 +62,10 @@ export default {
 }
 .back img {
   width: 40%;
+}
+.detail_tab_bar {
+  /*display: flex;*/
+  /*top:0;
+  z-index: 9;*/
 }
 </style>

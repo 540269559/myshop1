@@ -9,19 +9,19 @@
   </ol>
 
   <!-- Wrapper for slides -->
-  <div class="carousel-inner" role="listbox">
+  <div class="carousel-inner">
     <div class="item" 
     :class="{active: index === 0}" 
     v-for="(item, index) in top_img">
-      <img :src="item" alt="..."class="center-block">
+      <img :src="item" class="center-block" @load="detailImgLoad">
     </div>
   </div>
 
   <!-- Controls -->
-  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
   </a>
-  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+  <a id="right" class="right carousel-control" href="#carousel-example-generic" data-slide="next">
     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
   </a>
 </div>
@@ -39,6 +39,11 @@ export default {
       }
     }
   },
+  methods: {
+    detailImgLoad() {
+      this.$emit("detailImgLoad")
+    }
+  },
   data () {
     return {
 
@@ -52,6 +57,12 @@ export default {
   text-align: center;
 }
 .item img {
-  width: 75%;
+  width: 100%;
+  /*transform: translate(0, -20%);*/
+}
+.carousel-inner {
+  height: 300px;
+}
+#carousel-example-generic {
 }
 </style>
