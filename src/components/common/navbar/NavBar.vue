@@ -37,6 +37,6 @@ export default {
     flex: 1;
     text-align: center;
     line-height: 44px;
-    box-shadow: 0 0 1px rgba(100, 100, 100, 0.8);
+    /*box-shadow: 0 0 1px rgba(100, 100, 100, 0.8);*/
   }
 </style>

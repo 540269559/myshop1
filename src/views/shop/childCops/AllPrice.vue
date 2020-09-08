@@ -24,11 +24,11 @@ export default {
   },
   computed: {
     totalPrice() {
-      return this.$store.state.cartList.filter(item => {
+      return (this.$store.state.cartList.filter(item => {
         return item.checked
       }).reduce((preValue, item) => {
         return preValue + (parseFloat(item.newPrice.substr(1))) * item.count
-      }, 0)
+      }, 0)).toFixed(2)
     }
   },
   mounted() {

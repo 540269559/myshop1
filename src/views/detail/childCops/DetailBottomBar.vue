@@ -75,7 +75,7 @@ export default {
 }
 .box1 img {
   margin-top:3px;
-  width: 50%;
+  width: 41%;
 }
 .box2 {
   width: 24%;

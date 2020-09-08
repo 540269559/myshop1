@@ -32,11 +32,6 @@
       
     </detail-bottom-bar>
     <click-text v-show="IsShowMes"></click-text>
-    <!-- <ul>
-      <li v-for="item in this.$store.state.cartList">
-        {{item}}
-      </li>
-    </ul> -->
   </div>
 </template>
 
@@ -264,6 +259,9 @@ export default {
   /*margin-bottom: 49px;*/
 }
 .bottom_bar {
-
+  /*margin-bottom: 5px;*/
+  position:relative;
+  bottom:0;
+  /*height:60px;*/
 }
 </style>
